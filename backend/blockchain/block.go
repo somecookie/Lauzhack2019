@@ -1,4 +1,4 @@
-package backend
+package blockchain
 
 //Block represents one block of the block chain.
 //FirstName  string is the first name of the doctor in charge.
