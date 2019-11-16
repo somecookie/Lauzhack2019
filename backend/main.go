@@ -1,17 +1,75 @@
 package main
 
 import (
-	"github.com/somecookie/Peerster/helper"
+	"encoding/hex"
+	"encoding/json"
+	"github.com/somecookie/Lauzhack2019/backend/search"
+	"log"
 	"net/http"
+	"strconv"
 )
 
 func main() {
 	serverAddr := "localhost:8080"
 	http.Handle("/", http.FileServer(http.Dir("./frontend")))
-	//http.HandleFunc("/id", IDHandler)
+	http.HandleFunc("/search", searchHandler)
 
 	for {
-		err := http.ListenAndServe(serverAddr, nil)
-		helper.LogError(err)
+		if err := http.ListenAndServe(serverAddr, nil); err != nil {
+			log.Println(err)
+		}
+
 	}
+}
+
+func searchHandler(writer http.ResponseWriter, request *http.Request) {
+	switch request.Method {
+	case "GET":
+		searchQuery := parseSearchParams(request)
+		blocks := searchQuery.Search()
+
+		if res, err := json.Marshal(blocks); err == nil{
+			writer.WriteHeader(http.StatusOK)
+			writer.Write(res)
+		}else{
+			writer.WriteHeader(http.StatusInternalServerError)
+		}
+
+	default:
+		writer.WriteHeader(http.StatusNotFound)
+	}
+}
+
+func parseSearchParams(request *http.Request) *search.Query{
+	searchQuery := &search.Query{}
+	if firstName, ok := request.URL.Query()["firstName"]; ok {
+		searchQuery.FirstName = firstName[0]
+	}
+	if name, ok := request.URL.Query()["name"]; ok {
+		searchQuery.Name = name[0]
+	}
+	if location, ok := request.URL.Query()["location"]; ok {
+		searchQuery.Location = location[0]
+	}
+	if isSuccess, ok := request.URL.Query()["isSuccess"]; ok {
+		if isSuccess[0] == "1" {
+			searchQuery.IsSuccess = true
+		} else if isSuccess[0] == "0" {
+			searchQuery.IsSuccess = false
+		}
+	}
+	if minSuccess, ok := request.URL.Query()["minSuccess"]; ok {
+		if rate, err := strconv.ParseFloat(minSuccess[0], 64); err == nil {
+			if rate >= 0 && rate <= 100 {
+				searchQuery.MinSuccessRate = rate
+			}
+		}
+	}
+	if reportHash, ok := request.URL.Query()["reportHash"]; ok {
+		if h, err := hex.DecodeString(reportHash[0]); err == nil && len(h) == 32 {
+			searchQuery.ReportHash = reportHash[0]
+		}
+	}
+
+	return searchQuery
 }
