@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Lauzhack2019/backend/search"
+	"Lauzhack2019/backend/blockchain"
 	"encoding/json"
 	"fmt"
 	"github.com/AntonRagot/Peerster/utils"
@@ -11,7 +11,7 @@ import (
 
 func main() {
 	serverAddr := "localhost:8080"
-	http.Handle("/", http.FileServer(http.Dir("./frontend")))
+	http.Handle("/", http.FileServer(http.Dir("../frontend")))
 	http.HandleFunc("/search", searchHandler)
 	http.HandleFunc("/write", writeHandler)
 	http.HandleFunc("/get", getHandler)
@@ -25,9 +25,10 @@ func main() {
 }
 
 func searchHandler(writer http.ResponseWriter, request *http.Request) {
+	enableCors(&writer)
 	switch request.Method{
 	case "GET":
-		search.Query{}
+		//search.Query{}
 		if firstName, ok := request.URL.Query()["firstName"]; ok{
 			fmt.Println(firstName)
 		}
@@ -39,6 +40,7 @@ func searchHandler(writer http.ResponseWriter, request *http.Request) {
 }
 
 func writeHandler(writer http.ResponseWriter, request *http.Request) {
+	enableCors(&writer)
 	switch request.Method{
 	case "POST":
 		firstName := request.Form.Get("FirstName")
@@ -46,6 +48,8 @@ func writeHandler(writer http.ResponseWriter, request *http.Request) {
 		location := request.Form.Get("Location")
 		success := request.Form.Get("Success")
 		report := request.Form.Get("Report")
+
+		fmt.Println(firstName + name + location + success + report)
 
 		//Create block
 		//Push block to the blockchain
@@ -56,11 +60,14 @@ func writeHandler(writer http.ResponseWriter, request *http.Request) {
 }
 
 func getHandler(writer http.ResponseWriter, request *http.Request) {
+	enableCors(&writer)
+	enableCors(&writer)
 	switch request.Method{
 	case "GET":
 		//Make a list of all blocks
+		//blockList := getBlocksAsList()
 
-		blockList := getBlocksAsList()
+		blockList := blockchain.GetMockDataAsList()
 		blockListJson, err := json.Marshal(blockList)
 		utils.CheckError(err)
 
@@ -71,4 +78,8 @@ func getHandler(writer http.ResponseWriter, request *http.Request) {
 	default:
 		writer.WriteHeader(http.StatusNotFound)
 	}
+}
+
+func enableCors(w *http.ResponseWriter) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
 }

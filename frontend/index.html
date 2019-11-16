@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="css/custom.css">
   <script src="jquery-3.4.1.js"></script>
   <script src="js/bootstrap.bundle.min.js"></script>
-  <!--<script type="text/javascript" src="queries.js"></script>-->
+  <script type="text/javascript" src="queries.js"></script>
 </head>
 
 <body>
@@ -36,7 +36,7 @@
   <br>
   <div class="d-flex justify-content-between align-items-center mb-3">
     <h3>Last Blocks</h3>
-    <button type="button" class="btn btn-outline-primary">See all blocks</button>
+    <button type="button" class="btn btn-outline-primary" id="getAllBlocks">See all blocks</button>
   </div>
   <br>
   <table class="table">
@@ -48,28 +48,19 @@
       <th scope="col">Handle</th>
     </tr>
     </thead>
-    <tbody>
-    <tr onclick="location.href='block.html';" style="cursor: pointer;">
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr onclick="location.href='block.html';" style="cursor: pointer;">
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr onclick="location.href='block.html';" style="cursor: pointer;">
-      <th scope="row">3</th>
-      <td>Larry</td>
-      <td>the Bird</td>
-      <td>@twitter</td>
-    </tr>
+    <tbody id="listBlocks">
     </tbody>
   </table>
 </div>
+
+<script>
+$(document).ready(function() {
+    getBlocks();
+    document.getElementById('getAllBlocks').onclick = function() {
+        getBlocks();
+    };
+});
+</script>
 
 </body>
 </html>

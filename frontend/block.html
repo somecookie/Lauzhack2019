@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="css/custom.css">
   <script src="jquery-3.4.1.js"></script>
   <script src="js/bootstrap.bundle.min.js"></script>
-  <!--<script type="text/javascript" src="queries.js"></script>-->
+  <script type="text/javascript" src="queries.js"></script>
 </head>
 
 <body>
@@ -39,7 +39,7 @@
         <!-- Table head -->
       
         <!-- Table body -->
-        <tbody>
+        <tbody id="block">
           <tr>
             <th scope="row">Name</th>
             <td><i class="fas mr-2 grey-text" aria-hidden="true"></i>Cell 1</td>
@@ -58,6 +58,12 @@
       <!-- Table  -->
     
 </div>
+
+<script>
+  $(document).ready(function() {
+      displayBlock();
+  });
+  </script>
 
 </body>
 </html>
