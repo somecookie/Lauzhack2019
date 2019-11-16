@@ -13,6 +13,8 @@ func main() {
 	serverAddr := "localhost:8080"
 	http.Handle("/", http.FileServer(http.Dir("./frontend")))
 	http.HandleFunc("/search", searchHandler)
+	http.HandleFunc("/write", writeHandler)
+	http.HandleFunc("/get", getHandler)
 
 	for {
 		if err := http.ListenAndServe(serverAddr, nil); err != nil {
@@ -28,19 +30,51 @@ func searchHandler(writer http.ResponseWriter, request *http.Request) {
 		searchQuery := parseSearchParams(request)
 		blocks := searchQuery.Search()
 
-		if res, err := json.Marshal(blocks); err == nil{
+		if res, err := json.Marshal(blocks); err == nil {
 			writer.WriteHeader(http.StatusOK)
 			writer.Write(res)
-		}else{
+		} else {
 			writer.WriteHeader(http.StatusInternalServerError)
 		}
-
 	default:
 		writer.WriteHeader(http.StatusNotFound)
 	}
 }
 
-func parseSearchParams(request *http.Request) *search.Query{
+func writeHandler(writer http.ResponseWriter, request *http.Request) {
+	switch request.Method {
+	case "POST":
+		/*firstName := request.Form.Get("FirstName")
+		name := request.Form.Get("Name")
+		location := request.Form.Get("Location")
+		success := request.Form.Get("Success")
+		report := request.Form.Get("Report")*/
+
+		//Create block
+		//Push block to the blockchain
+	default:
+		writer.WriteHeader(http.StatusNotFound)
+	}
+}
+
+func getHandler(writer http.ResponseWriter, request *http.Request) {
+	switch request.Method {
+	case "GET":
+		//Make a list of all blocks
+
+		/*blockList := getBlocksAsList()
+		blockListJson, err := json.Marshal(blockList)
+
+		writer.Header().Set("Content-Type", "application/json")
+
+		writer.Write(blockListJson)*/
+		writer.WriteHeader(http.StatusOK)
+
+	default:
+		writer.WriteHeader(http.StatusNotFound)
+	}
+}
+func parseSearchParams(request *http.Request) *search.Query {
 	searchQuery := &search.Query{}
 	if firstName, ok := request.URL.Query()["firstName"]; ok {
 		searchQuery.FirstName = firstName[0]

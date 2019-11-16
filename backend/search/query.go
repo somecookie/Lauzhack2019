@@ -11,9 +11,8 @@ type Query struct {
 	ReportHash     string
 }
 
-
-func (q *Query) Search() []blockchain.Block{
-	blocks := make([]blockchain.Block,0)
+func (q *Query) Search() []blockchain.Block {
+	blocks := make([]blockchain.Block, 0)
 	blocks = append(blocks, blockchain.Block{
 		FirstName:   "Bobby",
 		Name:        "Bob",
