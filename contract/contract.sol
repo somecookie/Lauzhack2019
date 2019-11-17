@@ -24,4 +24,12 @@ contract Doc{
     function updateValidated(string memory doc, bytes32 hash) public{
         validated[doc][hash] = true;
     }
+
+    function getDocMedOps(string memory doc) view public returns (uint){
+        return docMedOps[doc];
+    }
+
+    function getDocSuccess(string memory doc) view public returns (uint){
+        return docSuccesses[doc];
+    }
 }

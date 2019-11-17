@@ -9,12 +9,14 @@ import (
 	"github.com/somecookie/Lauzhack2019/backend/database"
 	"github.com/somecookie/Lauzhack2019/backend/search"
 	"log"
+	"math/big"
 	"net/http"
 	"strconv"
 )
 
 var hasher = sha256.New()
 var transactions = make([]*types.Transaction, 0)
+var docs = make([]string, 0)
 
 type GetAnswer struct {
 	contract    string
@@ -23,6 +25,11 @@ type GetAnswer struct {
 	hashReport  string
 	success     bool
 	successRate float32
+}
+
+type Metric struct{
+	OpNb big.Int
+	SuccessNb big.Int
 }
 
 func launchServer() {
@@ -38,7 +45,6 @@ func launchServer() {
 		if err := http.ListenAndServe("localhost:8080", nil); err != nil {
 			log.Println(err)
 		}
-
 	}
 }
 
@@ -67,6 +73,7 @@ func writeHandler(writer http.ResponseWriter, request *http.Request) {
 		err := request.ParseForm()
 		if err == nil {
 			nameDoctor := request.Form.Get("nameDoctor")
+			docs = append(docs, nameDoctor)
 			//namePatient := request.Form.Get("namePatient")
 			success := request.Form.Get("success")
 			successBool := success == "true"
@@ -91,6 +98,7 @@ func writeHandler(writer http.ResponseWriter, request *http.Request) {
 			}
 
 			transactions = append(transactions, tx)
+		}
 
 	default:
 		writer.WriteHeader(http.StatusNotFound)
@@ -171,6 +179,29 @@ func getHandler(writer http.ResponseWriter, request *http.Request) {
 		*/
 	default:
 		writer.WriteHeader(http.StatusNotFound)
+	}
+}
+
+func getContract(writer http.ResponseWriter, request *http.Request){
+	enableCors(&writer)
+	switch request.Method {
+	case "GET":
+		opNb, _ := Session.GetDocMedOps("")
+		successNb, _ := Session.GetDocSuccess("")
+		metric := Metric{
+			OpNb:      *opNb,
+			SuccessNb: *successNb,
+		}
+
+		if json, err := json.Marshal(metric); err == nil {
+			writer.WriteHeader(http.StatusOK)
+			writer.Write(json)
+		} else {
+			log.Println(err)
+		}
+
+	default:
+		break
 	}
 }
 
