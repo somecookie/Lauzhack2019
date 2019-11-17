@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="UTF-8">
+    <title>Medster</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/custom.css">
+    <script src="jquery-3.4.1.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src='/js/sjcl.js'></script>
+    <script type="text/javascript" src="queries.js"></script>
+</head>
+
+<body>
+
+<div class="container-fluid" id="title" style="background-color:#3c84ff;">
+    <div id="title_inner">
+        <h1 onclick="location.href='search.html';" style="cursor: pointer;">Medster</h1>
+    </div>
+    <div id="title_nav">
+        <nav id="sidebar">
+
+            <ul class="list-unstyled components">
+                <!--<p>Dummy Heading</p>-->
+                <li>
+                    <a href="search.html">Transactions</a>
+                </li>
+                <li>
+                    <a href="fillPost.html">Post</a>
+                </li>
+                <li>
+                    <a href="#">Validate</a>
+                </li>
+                <li>
+                    <a href="#">Profile</a>
+                </li>
+                <li>
+                    <a href="#">Sign out</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<div class="wrapper">
+    <br>
+
+    <div class="container" id="main_container">
+        <!--<div class="d-flex justify-content-between align-items-center mb-3">
+          <h3>Informations about ... </h3>
+        </div>-->
+        <br>
+        <br>
+
+        <!-- Table  -->
+        <table class="table">
+            <!-- Table head -->
+            <thead>
+            <tr>
+                <th></th>
+                <th><i class="fas fa-leaf mr-2 blue-text" aria-hidden="true"></i>BLOCK</th>
+            </tr>
+            </thead>
+            <!-- Table head -->
+
+            <!-- Table body -->
+            <tbody id="block">
+            </tbody>
+            <!-- Table body -->
+        </table>
+        <!-- Table  -->
+
+        <br>
+        <br>
+
+        <h2>Want to validate the transaction?</h2>
+
+
+        <div class="custom-file form-group">
+
+            <div class="col-sm-10">
+                <div id="chat-form">
+                    <label class="control-label col-sm-3" for="email">Select the report:</label>
+
+                    <input type="button" class="btn btn-secondary" alt="Select the report to upload" id="fileShare" value="Select report">
+                    <input id="file-input" type="file" style="display: none;" />
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        displayBlock();
+    });
+
+    document.getElementById("fileShare").onclick = () => {
+        document.getElementById('file-input').click();
+    }
+
+    document.getElementById("file-input").onchange = e => fileSelectionHandler(e)
+</script>
+
+</body>
+</html>

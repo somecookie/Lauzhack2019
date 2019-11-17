@@ -39,7 +39,6 @@ func launchServer() {
 	http.HandleFunc("/get", getHandler)
 	http.HandleFunc("/login", loginHandler)
 	http.HandleFunc("/validate", validateHandler)
-
 	http.HandleFunc("/doctors", getContract)
 
 	for {
