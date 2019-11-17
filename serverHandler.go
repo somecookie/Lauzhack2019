@@ -4,7 +4,6 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
-	"fmt"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/somecookie/Lauzhack2019/backend/database"
 	"github.com/somecookie/Lauzhack2019/backend/search"
@@ -16,6 +15,7 @@ import (
 type succ struct {
 	Hash string `json:"hash"`
 	Success bool `json:"success"`
+	IsValid bool `json:"isValid"`
 }
 
 type infoMed struct {
@@ -119,8 +119,15 @@ func validateHandler(writer http.ResponseWriter, request *http.Request) {
 		err := request.ParseForm()
 		if err == nil {
 			hash := request.Form.Get("hash")
+			log.Println(hash)
 
-			fmt.Println(hash)
+		}
+
+		//TODO hack de ouf
+		for _, succ := range validated{
+			for _, s:= range succ{
+				s.IsValid = true
+			}
 		}
 
 	default:
@@ -198,6 +205,11 @@ func getContract(writer http.ResponseWriter, request *http.Request){
 		for nameDoc,values := range validated {
 			opNb, _ := Session.GetDocMedOps(nameDoc)
 			successNb, _ := Session.GetDocSuccess(nameDoc)
+
+			for _,val := range values{
+				isValid, _ := Session.IsValid(nameDoc, stringToKeccak256(val.Hash))
+				val.IsValid = isValid
+			}
 
 			curInfoMec := infoMed{
 				SuccessNb: *successNb,

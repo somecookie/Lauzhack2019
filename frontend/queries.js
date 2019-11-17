@@ -19,7 +19,7 @@ let getDoctors = function() {
                     storedUsers.push(block);
                     str += "<tr onclick=\"changePageDoc(this);\" style=\"cursor: pointer;\" >";
                     str += "<th scope=\"row\">" + (i + 1) + "</th>";
-                    str += "<td>" + "Doctor " + i + "</td>";
+                    str += "<td>" + block.name+ "</td>";
                     str += "<td>" + block.OpNb + "</td>";
                     str += "<td>" + block.SuccessNb + "</td>";
                     str += "</tr>";
@@ -37,10 +37,9 @@ let displayDoctors = function() {
     //if (rowBlock != -1) {
     //curBlock = storedBlocks[rowBlock - 1];
     str += "<tr><th scope=\"row\">Name</th><td><i class=\"fas mr-2 grey-text\" aria-hidden=\"true\"></i>" + localStorage.getItem('Name') + "</td></tr>";
-    str += "<tr><th scope=\"row\">OpNb</th><td><i class=\"fas mr-2 grey-text\" aria-hidden=\"true\"></i>"+ localStorage.getItem('OpNb') +"</td></tr>";
-    str += "<tr><th scope=\"row\">SuccessNb</th><td><i class=\"fas mr-2 grey-text\" aria-hidden=\"true\"></i>"+ localStorage.getItem('SuccessNb') +"</td></tr>";
-    str += "<tr><th scope=\"row\">hash</th><td><i class=\"fas mr-2 grey-text\" aria-hidden=\"true\"></i>"+ localStorage.getItem('hash') +"</td></tr>";
-    str += "<tr><th scope=\"row\">success</th><td><i class=\"fas mr-2 grey-text\" aria-hidden=\"true\"></i>"+ localStorage.getItem('success') +"</td></tr>";
+    str += "<tr><th scope=\"row\">Hash of the report</th><td><i class=\"fas mr-2 grey-text\" aria-hidden=\"true\"></i>"+ localStorage.getItem('hash') +"</td></tr>";
+    str += "<tr><th scope=\"row\">Successful</th><td><i class=\"fas mr-2 grey-text\" aria-hidden=\"true\"></i>"+ localStorage.getItem('success') +"</td></tr>";
+    str += "<tr><th scope=\"row\">Valid</th><td><i class=\"fas mr-2 grey-text\" aria-hidden=\"true\"></i>"+ localStorage.getItem('valid') +"</td></tr>";
 
     //}
     toDiplay.innerHTML = str;
@@ -108,6 +107,7 @@ let changePageDoc = function(e) {
     localStorage.setItem('SuccessNb', storedUsers[index - 1].SuccessNb);
     localStorage.setItem('hash', storedUsers[index - 1].ops[0].hash);
     localStorage.setItem('success', storedUsers[index - 1].ops[0].success);
+    localStorage.setItem('valid', storedUsers[index - 1].ops[0].isValid);
     location.href='host.html';
 };
 
@@ -121,12 +121,15 @@ function fileSelectionHandler(e) {
 
     reader.onload = readerEvent => {
         var content = readerEvent.target.result;
+        console.log(content)
         
         let hashFile = sjcl.hash.sha256.hash(content);
 
         let toSend = {
-            hash : hashFile,
+            hash : sjcl.codec.hex.fromBits(hashFile)
         };
+
+        console.log("hello",toSend)
 
 
         $.ajax({

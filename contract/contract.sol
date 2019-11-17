@@ -32,4 +32,8 @@ contract Doc{
     function getDocSuccess(string memory doc) view public returns (uint){
         return docSuccesses[doc];
     }
+
+    function isValid(string memory doc, bytes32 hash) view public returns (bool){
+        return validated[doc][hash];
+    }
 }
