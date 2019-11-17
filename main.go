@@ -15,6 +15,7 @@ import (
 
 var myenv map[string]string
 var Session contract.ContractSession
+var contractHash string
 
 const envLoc = ".env"
 const ErrTransactionWait = "if you've just started the application, wait a while for the network to confirm your transaction."
@@ -64,6 +65,7 @@ func NewContract(session contract.ContractSession, client *ethclient.Client) con
 		log.Fatalf("could not deploy contract: %v\n", err)
 	}
 	fmt.Printf("Contract deployed! Wait for tx %s to be confirmed.\n", tx.Hash().Hex())
+	contractHash = tx.Hash().Hex()
 
 	session.Contract = instance
 	updateEnvFile("CONTRACTADDR", contractAddress.Hex())
@@ -114,16 +116,17 @@ func main() {
 	defer client.Close()
 
 	s := NewSession(context.Background())
+	s = NewContract(s, client)
 
 	// Load or Deploy contract, and update Session with contract instance
-	if myenv["CONTRACTADDR"] == "" {
+	/*if myenv["CONTRACTADDR"] == "" {
 		s = NewContract(s, client)
-	}
+	}*/
 
-	// If we have an existing contract, load it; if we've deployed a new contract, attempt to load it.
+/*	// If we have an existing contract, load it; if we've deployed a new contract, attempt to load it.
 	if myenv["CONTRACTADDR"] != "" {
 		s = LoadContract(s, client)
-	}
+	}*/
 
 	Session = s
 	launchServer()

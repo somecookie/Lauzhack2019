@@ -4,9 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
-	"fmt"
 	"github.com/ethereum/go-ethereum/core/types"
-	"github.com/somecookie/Lauzhack2019/backend/blockchain"
 	"github.com/somecookie/Lauzhack2019/backend/database"
 	"github.com/somecookie/Lauzhack2019/backend/search"
 	"log"
@@ -15,7 +13,16 @@ import (
 )
 
 var hasher = sha256.New()
-var transactions = make([]*types.Transaction,0)
+var transactions = make([]*types.Transaction, 0)
+
+type GetAnswer struct {
+	contract    string
+	transaction *types.Transaction
+	doctorName  string
+	hashReport  string
+	success     bool
+	successRate float32
+}
 
 func launchServer() {
 	database.PopulateUsers()
@@ -52,7 +59,7 @@ func searchHandler(writer http.ResponseWriter, request *http.Request) {
 
 func writeHandler(writer http.ResponseWriter, request *http.Request) {
 	enableCors(&writer)
-	switch request.Method{
+	switch request.Method {
 	case "POST":
 		err := request.ParseForm()
 		if err == nil {
@@ -64,21 +71,22 @@ func writeHandler(writer http.ResponseWriter, request *http.Request) {
 			reportToHash := request.Form.Get("toHash")
 
 			hasher.Reset()
-			_,err := hasher.Write([]byte(reportToHash))
+			_, err := hasher.Write([]byte(reportToHash))
 
-			if err != nil{
+			if err != nil {
 				log.Println(err)
 				return
 			}
 
-			hash :=hasher.Sum(nil)
+			hash := hasher.Sum(nil)
 
-			tx, err := Session.AppendValidated(nameDoctor,stringToKeccak256(hex.EncodeToString(hash)),successBool)
+			tx, err := Session.AppendValidated(nameDoctor, stringToKeccak256(hex.EncodeToString(hash)), successBool)
 
-			if err != nil{
+			if err != nil {
 				log.Println(err)
 				return
 			}
+
 
 			transactions = append(transactions, tx)
 
@@ -91,7 +99,7 @@ func writeHandler(writer http.ResponseWriter, request *http.Request) {
 
 func loginHandler(writer http.ResponseWriter, request *http.Request) {
 	enableCors(&writer)
-	switch request.Method{
+	switch request.Method {
 	case "GET":
 		err := request.ParseForm()
 		if err == nil {
@@ -117,22 +125,33 @@ func loginHandler(writer http.ResponseWriter, request *http.Request) {
 
 func getHandler(writer http.ResponseWriter, request *http.Request) {
 	enableCors(&writer)
-	switch request.Method{
+	switch request.Method {
 	case "GET":
-		//Make a list of all blocks
-		//blockList := getBlocksAsList()
 
-		blockList := blockchain.GetMockDataAsList()
+		writer.Header().Set("Content-Type", "application/json")
+
+		if len(transactions) == 0 {
+			writer.WriteHeader(http.StatusOK)
+		} else {
+			if json, err := json.Marshal(transactions); err == nil {
+				writer.WriteHeader(http.StatusOK)
+				writer.Write(json)
+			} else {
+				log.Println(err)
+			}
+		}
+
+		/*blockList := blockchain.GetMockDataAsList()
 		//blockList := getBlocksAsList()
 		if blockListJson, err := json.Marshal(blockList); err == nil {
-			writer.Header().Set("Content-Type", "application/json")
+
 
 			writer.WriteHeader(http.StatusOK)
 			writer.Write(blockListJson)
 		} else {
 			writer.WriteHeader(http.StatusInternalServerError)
 		}
-
+		*/
 	default:
 		writer.WriteHeader(http.StatusNotFound)
 	}
