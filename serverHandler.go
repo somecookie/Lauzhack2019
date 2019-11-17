@@ -13,24 +13,23 @@ import (
 	"net/http"
 	"strconv"
 )
+type succ struct {
+	hash string `json:"hash"`
+	success bool `json:"success"`
+}
+
+type infoMed struct {
+	name string `json:"name"`
+	OpNb big.Int `json:"OpNb"`
+	SuccessNb big.Int `json:"SuccessNb"`
+	ops []succ `json:"ops"`
+}
 
 var hasher = sha256.New()
 var transactions = make([]*types.Transaction, 0)
 var docs = make([]string, 0)
+var validated = make(map[string][]succ)
 
-type GetAnswer struct {
-	contract    string
-	transaction *types.Transaction
-	doctorName  string
-	hashReport  string
-	success     bool
-	successRate float32
-}
-
-type Metric struct{
-	OpNb big.Int
-	SuccessNb big.Int
-}
 
 func launchServer() {
 	database.PopulateUsers()
@@ -40,6 +39,8 @@ func launchServer() {
 	http.HandleFunc("/get", getHandler)
 	http.HandleFunc("/login", loginHandler)
 	http.HandleFunc("/validate", validateHandler)
+
+	http.HandleFunc("/doctors", getContract)
 
 	for {
 		if err := http.ListenAndServe("localhost:8080", nil); err != nil {
@@ -73,7 +74,9 @@ func writeHandler(writer http.ResponseWriter, request *http.Request) {
 		err := request.ParseForm()
 		if err == nil {
 			nameDoctor := request.Form.Get("nameDoctor")
-			docs = append(docs, nameDoctor)
+			if _, ok := validated[nameDoctor]; !ok{
+				validated[nameDoctor] = make([]succ,0)
+			}
 			//namePatient := request.Form.Get("namePatient")
 			success := request.Form.Get("success")
 			successBool := success == "true"
@@ -89,6 +92,10 @@ func writeHandler(writer http.ResponseWriter, request *http.Request) {
 			}
 
 			hash := hasher.Sum(nil)
+			validated[nameDoctor] = append(validated[nameDoctor], succ{
+				hash:   hex.EncodeToString(hash),
+				success: successBool,
+			})
 
 			tx, err := Session.AppendValidated(nameDoctor, stringToKeccak256(hex.EncodeToString(hash)), successBool)
 
@@ -186,14 +193,25 @@ func getContract(writer http.ResponseWriter, request *http.Request){
 	enableCors(&writer)
 	switch request.Method {
 	case "GET":
-		opNb, _ := Session.GetDocMedOps("")
-		successNb, _ := Session.GetDocSuccess("")
-		metric := Metric{
-			OpNb:      *opNb,
-			SuccessNb: *successNb,
+		listMeds := make([]infoMed,0)
+
+		for nameDoc,values := range validated {
+			opNb, _ := Session.GetDocMedOps("")
+			successNb, _ := Session.GetDocSuccess("")
+
+			curInfoMec := infoMed{
+				name:      nameDoc,
+				OpNb:      *opNb,
+				SuccessNb: *successNb,
+				ops: values,
+			}
+
+			listMeds = append(listMeds, curInfoMec)
+
 		}
 
-		if json, err := json.Marshal(metric); err == nil {
+		if json, err := json.Marshal(listMeds); err == nil {
+			writer.Header().Set("Content-Type", "application/json")
 			writer.WriteHeader(http.StatusOK)
 			writer.Write(json)
 		} else {

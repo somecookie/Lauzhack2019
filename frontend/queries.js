@@ -2,6 +2,34 @@ let blockClicked = null;
 let storedBlocks = [];
 let row = -1;
 
+let getDoctors = function() {
+    $.ajax({
+        type: "GET",
+        url: '/doctors',
+        dataType:'json',
+        success : function(answer) {
+            console.log(answer);
+            let str = "";
+            let docs = document.getElementById('listDocs');
+
+            if (answer != null) {
+                for(let i = 0 ; i < answer.length ; i++) {
+                    let block = answer[i];
+                    storedBlocks.push(block);
+                    //onclick="changePage(this);" style="cursor: pointer;"
+                    str += "<tr >";
+                    str += "<th scope=\"row\">" + (i + 1) + "</th>";
+                    str += "<td>" + "Doctor " + i + "</td>";
+                    str += "<td>" + block.OpNb + "</td>";
+                    str += "<td>" + block.SuccessNb + "</td>";
+                    str += "</tr>";
+                }
+            }
+            docs.innerHTML = str;
+        }
+    })
+};
+
 let getBlocks = function() {
     $.ajax({
         type: "GET",
