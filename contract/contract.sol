@@ -5,17 +5,17 @@ contract Doc{
     mapping(string => uint) public docMedOps;
     mapping(string => uint) public docSuccesses;
 
-    function appendMedOp(string doc){
+    function appendMedOp(string memory doc) internal{
         docMedOps[doc] += 1;
     }
 
-    function appendDocSuccess(string doc, bool success){
+    function appendDocSuccess(string memory doc, bool success) internal{
         if(success){
             docSuccesses[doc] += 1;
         }
     }
 
-    function appendValidated(string doc, bytes32 hash) public {
+    function appendValidated(string memory doc, bytes32 hash, bool success) public {
         validated[doc][hash] = true;
         appendMedOp(doc);
         appendDocSuccess(doc, success);

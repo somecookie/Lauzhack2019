@@ -3,16 +3,14 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/Lnelso/Lauzhack2019/contract"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/joho/godotenv"
+	"github.com/somecookie/Lauzhack2019/contract"
 	"log"
 	"os"
-
-	//"github.com/ethereum/go-ethereum"
-	"github.com/joho/godotenv"
 )
 
 var myenv map[string]string
@@ -27,7 +25,7 @@ func loadEnv() {
 	}
 }
 
-func NewSession(ctx context.Context) (session contract.ContractSession) {
+func NewSession(ctx context.Context) (session contract.DocSession) {
 	loadEnv()
 	keystore, err := os.Open(myenv["KEYSTORE"])
 	if err != nil {
@@ -56,11 +54,11 @@ func NewSession(ctx context.Context) (session contract.ContractSession) {
 }
 
 // NewContract deploys a contract if no existing contract exists
-func NewContract(session contract.ContractSession, client *ethclient.Client, question string, answer string) contract.ContractSession {
+func NewContract(session contract.ContractSession, client *ethclient.Client) contract.ContractSession {
 	loadEnv()
 
 	// Hash answer before sending it over Ethereum network.
-	contractAddress, tx, instance, err := contract.DeployContract(&session.TransactOpts, client, question, stringToKeccak256(answer))
+	contractAddress, tx, instance, err := contract.DeployContract(&session.TransactOpts, client)
 	if err != nil {
 		log.Fatalf("could not deploy contract: %v\n", err)
 	}
@@ -103,7 +101,7 @@ func updateEnvFile(k string, val string) {
 	}
 }
 
-func main(){
+func main() {
 	loadEnv()
 
 	//ctx := context.Background()
@@ -118,7 +116,7 @@ func main(){
 
 	// Load or Deploy contract, and update session with contract instance
 	if myenv["CONTRACTADDR"] == "" {
-		session = NewContract(session, client, myenv["QUESTION"], myenv["ANSWER"]) //TODO: Change
+		session = NewContract(session, client)
 	}
 
 	// If we have an existing contract, load it; if we've deployed a new contract, attempt to load it.

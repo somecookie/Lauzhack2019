@@ -28,10 +28,10 @@ var (
 )
 
 // ContractABI is the input ABI used to generate the binding from.
-const ContractABI = "[{\"constant\":true,\"inputs\":[],\"name\":\"doc_name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}]"
+const ContractABI = "[{\"constant\":false,\"inputs\":[{\"internalType\":\"string\",\"name\":\"doc\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"hash\",\"type\":\"bytes32\"},{\"internalType\":\"bool\",\"name\":\"success\",\"type\":\"bool\"}],\"name\":\"appendValidated\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"name\":\"docMedOps\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"name\":\"docSuccesses\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"},{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"name\":\"validated\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}]"
 
 // ContractBin is the compiled bytecode used for deploying new contracts.
-var ContractBin = "0x60806040523480156100115760006000fd5b50610017565b610190806100266000396000f3fe60806040523480156100115760006000fd5b50600436106100305760003560e01c806376fb44f31461003657610030565b60006000fd5b61003e6100ba565b6040518080602001828103825283818151815260200191508051906020019080838360005b8381101561007f5780820151818401525b602081019050610063565b50505050905090810190601f1680156100ac5780820380516001836020036101000a031916815260200191505b509250505060405180910390f35b60006000508054600181600116156101000203166002900480601f0160208091040260200160405190810160405280929190818152602001828054600181600116156101000203166002900480156101535780601f1061012857610100808354040283529160200191610153565b820191906000526020600020905b81548152906001019060200180831161013657829003601f168201915b50505050508156fea265627a7a723158204cd82c3146472456c72c13183391a846193bcf9934a2228b6d6b4fe9c2f3465164736f6c634300050d0032"
+var ContractBin = "0x608060405234801561001057600080fd5b5061061b806100206000396000f3fe608060405234801561001057600080fd5b506004361061004c5760003560e01c80631c2aeed8146100515780636bd5bbc214610122578063e23125e1146101f1578063e6ea34cd146102ce575b600080fd5b6101206004803603606081101561006757600080fd5b810190808035906020019064010000000081111561008457600080fd5b82018360208201111561009657600080fd5b803590602001918460018302840111640100000000831117156100b857600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f8201169050808301925050505050505091929192908035906020019092919080351515906020019092919050505061039d565b005b6101db6004803603602081101561013857600080fd5b810190808035906020019064010000000081111561015557600080fd5b82018360208201111561016757600080fd5b8035906020019184600183028401116401000000008311171561018957600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050509192919290505050610448565b6040518082815260200191505060405180910390f35b6102b46004803603604081101561020757600080fd5b810190808035906020019064010000000081111561022457600080fd5b82018360208201111561023657600080fd5b8035906020019184600183028401116401000000008311171561025857600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f82011690508083019250505050505050919291929080359060200190929190505050610476565b604051808215151515815260200191505060405180910390f35b610387600480360360208110156102e457600080fd5b810190808035906020019064010000000081111561030157600080fd5b82018360208201111561031357600080fd5b8035906020019184600183028401116401000000008311171561033557600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f8201169050808301925050505050505091929192905050506104bb565b6040518082815260200191505060405180910390f35b60016000846040518082805190602001908083835b602083106103d557805182526020820191506020810190506020830392506103b2565b6001836020036101000a0380198251168184511680821785525050505050509050019150509081526020016040518091039020600084815260200190815260200160002060006101000a81548160ff021916908315150217905550610439836104e9565b6104438382610563565b505050565b6001818051602081018201805184825260208301602085012081835280955050505050506000915090505481565b6000828051602081018201805184825260208301602085012081835280955050505050506020528060005260406000206000915091509054906101000a900460ff1681565b6002818051602081018201805184825260208301602085012081835280955050505050506000915090505481565b600180826040518082805190602001908083835b6020831061052057805182526020820191506020810190506020830392506104fd565b6001836020036101000a03801982511681845116808217855250505050505090500191505090815260200160405180910390206000828254019250508190555050565b80156105e25760016002836040518082805190602001908083835b602083106105a1578051825260208201915060208101905060208303925061057e565b6001836020036101000a0380198251168184511680821785525050505050509050019150509081526020016040518091039020600082825401925050819055505b505056fea265627a7a723158204c75bb55b2a23ac5b5feb666db43cd6705b1a1b998ca4ba6faac302aeea94ff264736f6c634300050d0032"
 
 // DeployContract deploys a new Ethereum contract, binding an instance of Contract to it.
 func DeployContract(auth *bind.TransactOpts, backend bind.ContractBackend) (common.Address, *types.Transaction, *Contract, error) {
@@ -189,28 +189,101 @@ func (_Contract *ContractTransactorRaw) Transact(opts *bind.TransactOpts, method
 	return _Contract.Contract.contract.Transact(opts, method, params...)
 }
 
-// DocName is a free data retrieval call binding the contract method 0x76fb44f3.
+// DocMedOps is a free data retrieval call binding the contract method 0x6bd5bbc2.
 //
-// Solidity: function doc_name() constant returns(string)
-func (_Contract *ContractCaller) DocName(opts *bind.CallOpts) (string, error) {
+// Solidity: function docMedOps(string ) constant returns(uint256)
+func (_Contract *ContractCaller) DocMedOps(opts *bind.CallOpts, arg0 string) (*big.Int, error) {
 	var (
-		ret0 = new(string)
+		ret0 = new(*big.Int)
 	)
 	out := ret0
-	err := _Contract.contract.Call(opts, out, "doc_name")
+	err := _Contract.contract.Call(opts, out, "docMedOps", arg0)
 	return *ret0, err
 }
 
-// DocName is a free data retrieval call binding the contract method 0x76fb44f3.
+// DocMedOps is a free data retrieval call binding the contract method 0x6bd5bbc2.
 //
-// Solidity: function doc_name() constant returns(string)
-func (_Contract *ContractSession) DocName() (string, error) {
-	return _Contract.Contract.DocName(&_Contract.CallOpts)
+// Solidity: function docMedOps(string ) constant returns(uint256)
+func (_Contract *ContractSession) DocMedOps(arg0 string) (*big.Int, error) {
+	return _Contract.Contract.DocMedOps(&_Contract.CallOpts, arg0)
 }
 
-// DocName is a free data retrieval call binding the contract method 0x76fb44f3.
+// DocMedOps is a free data retrieval call binding the contract method 0x6bd5bbc2.
 //
-// Solidity: function doc_name() constant returns(string)
-func (_Contract *ContractCallerSession) DocName() (string, error) {
-	return _Contract.Contract.DocName(&_Contract.CallOpts)
+// Solidity: function docMedOps(string ) constant returns(uint256)
+func (_Contract *ContractCallerSession) DocMedOps(arg0 string) (*big.Int, error) {
+	return _Contract.Contract.DocMedOps(&_Contract.CallOpts, arg0)
+}
+
+// DocSuccesses is a free data retrieval call binding the contract method 0xe6ea34cd.
+//
+// Solidity: function docSuccesses(string ) constant returns(uint256)
+func (_Contract *ContractCaller) DocSuccesses(opts *bind.CallOpts, arg0 string) (*big.Int, error) {
+	var (
+		ret0 = new(*big.Int)
+	)
+	out := ret0
+	err := _Contract.contract.Call(opts, out, "docSuccesses", arg0)
+	return *ret0, err
+}
+
+// DocSuccesses is a free data retrieval call binding the contract method 0xe6ea34cd.
+//
+// Solidity: function docSuccesses(string ) constant returns(uint256)
+func (_Contract *ContractSession) DocSuccesses(arg0 string) (*big.Int, error) {
+	return _Contract.Contract.DocSuccesses(&_Contract.CallOpts, arg0)
+}
+
+// DocSuccesses is a free data retrieval call binding the contract method 0xe6ea34cd.
+//
+// Solidity: function docSuccesses(string ) constant returns(uint256)
+func (_Contract *ContractCallerSession) DocSuccesses(arg0 string) (*big.Int, error) {
+	return _Contract.Contract.DocSuccesses(&_Contract.CallOpts, arg0)
+}
+
+// Validated is a free data retrieval call binding the contract method 0xe23125e1.
+//
+// Solidity: function validated(string , bytes32 ) constant returns(bool)
+func (_Contract *ContractCaller) Validated(opts *bind.CallOpts, arg0 string, arg1 [32]byte) (bool, error) {
+	var (
+		ret0 = new(bool)
+	)
+	out := ret0
+	err := _Contract.contract.Call(opts, out, "validated", arg0, arg1)
+	return *ret0, err
+}
+
+// Validated is a free data retrieval call binding the contract method 0xe23125e1.
+//
+// Solidity: function validated(string , bytes32 ) constant returns(bool)
+func (_Contract *ContractSession) Validated(arg0 string, arg1 [32]byte) (bool, error) {
+	return _Contract.Contract.Validated(&_Contract.CallOpts, arg0, arg1)
+}
+
+// Validated is a free data retrieval call binding the contract method 0xe23125e1.
+//
+// Solidity: function validated(string , bytes32 ) constant returns(bool)
+func (_Contract *ContractCallerSession) Validated(arg0 string, arg1 [32]byte) (bool, error) {
+	return _Contract.Contract.Validated(&_Contract.CallOpts, arg0, arg1)
+}
+
+// AppendValidated is a paid mutator transaction binding the contract method 0x1c2aeed8.
+//
+// Solidity: function appendValidated(string doc, bytes32 hash, bool success) returns()
+func (_Contract *ContractTransactor) AppendValidated(opts *bind.TransactOpts, doc string, hash [32]byte, success bool) (*types.Transaction, error) {
+	return _Contract.contract.Transact(opts, "appendValidated", doc, hash, success)
+}
+
+// AppendValidated is a paid mutator transaction binding the contract method 0x1c2aeed8.
+//
+// Solidity: function appendValidated(string doc, bytes32 hash, bool success) returns()
+func (_Contract *ContractSession) AppendValidated(doc string, hash [32]byte, success bool) (*types.Transaction, error) {
+	return _Contract.Contract.AppendValidated(&_Contract.TransactOpts, doc, hash, success)
+}
+
+// AppendValidated is a paid mutator transaction binding the contract method 0x1c2aeed8.
+//
+// Solidity: function appendValidated(string doc, bytes32 hash, bool success) returns()
+func (_Contract *ContractTransactorSession) AppendValidated(doc string, hash [32]byte, success bool) (*types.Transaction, error) {
+	return _Contract.Contract.AppendValidated(&_Contract.TransactOpts, doc, hash, success)
 }
