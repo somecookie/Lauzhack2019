@@ -25,7 +25,7 @@ func loadEnv() {
 	}
 }
 
-func NewSession(ctx context.Context) (session contract.DocSession) {
+func NewSession(ctx context.Context) (session contract.ContractSession) {
 	loadEnv()
 	keystore, err := os.Open(myenv["KEYSTORE"])
 	if err != nil {
