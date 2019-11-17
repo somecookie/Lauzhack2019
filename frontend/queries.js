@@ -56,4 +56,30 @@ let changePage = function(e) {
 }
 
 
+function fileSelectionHandler(e) {
 
+    file = e.target.files[0]
+
+    var reader = new FileReader();
+    reader.readAsText(file,'UTF-8');
+
+    reader.onload = readerEvent => {
+        var content = readerEvent.target.result;
+        
+        let hashFile = sjcl.hash.sha256.hash(content);
+
+        let toSend = {
+            hash : hashFile,
+        };
+
+
+        $.ajax({
+            type: "POST",
+            url: '/validate',
+            data: toSend,
+            success: function(answer) {
+                console.log(answer);
+            }
+        })
+   }
+}

@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="css/custom.css">
   <script src="jquery-3.4.1.js"></script>
   <script src="js/bootstrap.bundle.min.js"></script>
-  <script type="text/javascript" src="queries.js"></script>
+  <script src="form.js"></script>
 </head>
 
 <body>
@@ -51,46 +51,9 @@
 
 <div class="container" id="main_container">
   <br>
-  <div class="input-group mb-3">
-    <div class="input-group-prepend">
-    <span class="input-group-text" id="basic-addon1">
-      <img src="res/search.png" class="img-responsive" alt="Responsive image" width="16" height="16" />
-    </span>
-    </div>
-    <input type="text" class="form-control" placeholder="Search for transaction, doctor, success rate" aria-label="Search..." aria-describedby="basic-addon2">
-    <div class="input-group-append">
-      <button class="btn btn-outline-secondary" type="button">Search</button>
-    </div>
-  </div>
-  <br>
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h3>Last Blocks</h3>
-    <button type="button" class="btn btn-outline-primary" id="getAllBlocks">See all blocks</button>
-  </div>
-  <br>
-  <table class="table">
-    <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">First</th>
-      <th scope="col">Last</th>
-      <th scope="col">Handle</th>
-    </tr>
-    </thead>
-    <tbody id="listBlocks">
-    </tbody>
-  </table>
-</div>
-</div>
 
-<script>
-$(document).ready(function() {
-    getBlocks();
-    document.getElementById('getAllBlocks').onclick = function() {
-        getBlocks();
-    };
-});
-</script>
+
+</div>
 
 </body>
 </html>

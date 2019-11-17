@@ -23,6 +23,7 @@ func main() {
 	http.HandleFunc("/write", writeHandler)
 	http.HandleFunc("/get", getHandler)
 	http.HandleFunc("/login", loginHandler)
+	http.HandleFunc("/validate", validateHandler)
 
 	for {
 		if err := http.ListenAndServe(serverAddr, nil); err != nil {
@@ -72,13 +73,29 @@ func writeHandler(writer http.ResponseWriter, request *http.Request) {
 			fmt.Println(namePatient)
 			fmt.Println(success)
 			fmt.Println(reportHash)
-
 		}
 
 	default:
 		writer.WriteHeader(http.StatusNotFound)
 	}
 }
+
+func validateHandler(writer http.ResponseWriter, request *http.Request) {
+	enableCors(&writer)
+	switch request.Method{
+	case "POST":
+		err := request.ParseForm()
+		if err == nil {
+			hash := request.Form.Get("hash")
+
+			fmt.Println(hash)
+		}
+
+	default:
+		writer.WriteHeader(http.StatusNotFound)
+	}
+}
+
 
 func loginHandler(writer http.ResponseWriter, request *http.Request) {
 	enableCors(&writer)
