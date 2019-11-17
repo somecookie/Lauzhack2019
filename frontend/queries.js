@@ -1,6 +1,6 @@
 let blockClicked = null;
 let storedBlocks = [];
-let row = -1
+let row = -1;
 
 let getBlocks = function() {
     let get = $.ajax({
@@ -14,7 +14,7 @@ let getBlocks = function() {
         if (answer != null) {
             for(let i = 0 ; i < answer.length ; i++) {
                 let block = answer[i];
-                storedBlocks.push(block)
+                storedBlocks.push(block);
                 str += "<tr onclick=\"changePage(this);\" style=\"cursor: pointer;\">";
                 str += "<th scope=\"row\">" + (i + 1) + "</th>";
                 str += "<td>" + block.FirstName + "</td>";
@@ -43,7 +43,7 @@ let displayBlock = function() {
 
     //}
     toDiplay.innerHTML = str;
-}
+};
 
 let changePage = function(e) {
     index = e.rowIndex;
@@ -53,7 +53,7 @@ let changePage = function(e) {
     localStorage.setItem('Success', storedBlocks[index - 1].Success);
     localStorage.setItem('ReportHash', storedBlocks[index - 1].ReportHash);
     location.href='block.html';
-}
+};
 
 
 function fileSelectionHandler(e) {

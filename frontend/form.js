@@ -25,7 +25,7 @@ let sendFormToBackend = function() {
 
 function fileSelectionHandler(e) {
 
-    file = e.target.files[0]
+    file = e.target.files[0];
 
     var reader = new FileReader();
      reader.readAsText(file,'UTF-8');
