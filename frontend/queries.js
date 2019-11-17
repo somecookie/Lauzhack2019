@@ -1,5 +1,6 @@
 let blockClicked = null;
 let storedBlocks = [];
+let storedUsers = [];
 let row = -1;
 
 let getDoctors = function() {
@@ -15,9 +16,8 @@ let getDoctors = function() {
             if (answer != null) {
                 for(let i = 0 ; i < answer.length ; i++) {
                     let block = answer[i];
-                    storedBlocks.push(block);
-                    //onclick="changePage(this);" style="cursor: pointer;"
-                    str += "<tr >";
+                    storedUsers.push(block);
+                    str += "<tr onclick=\"changePageDoc(this);\" style=\"cursor: pointer;\" >";
                     str += "<th scope=\"row\">" + (i + 1) + "</th>";
                     str += "<td>" + "Doctor " + i + "</td>";
                     str += "<td>" + block.OpNb + "</td>";
@@ -28,6 +28,22 @@ let getDoctors = function() {
             docs.innerHTML = str;
         }
     })
+};
+
+let displayDoctors = function() {
+    str = "";
+    let toDiplay = document.getElementById('docs');
+    //console.log(rowBlock)
+    //if (rowBlock != -1) {
+    //curBlock = storedBlocks[rowBlock - 1];
+    str += "<tr><th scope=\"row\">Name</th><td><i class=\"fas mr-2 grey-text\" aria-hidden=\"true\"></i>" + localStorage.getItem('Name') + "</td></tr>";
+    str += "<tr><th scope=\"row\">OpNb</th><td><i class=\"fas mr-2 grey-text\" aria-hidden=\"true\"></i>"+ localStorage.getItem('OpNb') +"</td></tr>";
+    str += "<tr><th scope=\"row\">SuccessNb</th><td><i class=\"fas mr-2 grey-text\" aria-hidden=\"true\"></i>"+ localStorage.getItem('SuccessNb') +"</td></tr>";
+    str += "<tr><th scope=\"row\">hash</th><td><i class=\"fas mr-2 grey-text\" aria-hidden=\"true\"></i>"+ localStorage.getItem('hash') +"</td></tr>";
+    str += "<tr><th scope=\"row\">success</th><td><i class=\"fas mr-2 grey-text\" aria-hidden=\"true\"></i>"+ localStorage.getItem('success') +"</td></tr>";
+
+    //}
+    toDiplay.innerHTML = str;
 };
 
 let getBlocks = function() {
@@ -44,7 +60,7 @@ let getBlocks = function() {
             for(let i = 0 ; i < answer.length ; i++) {
                 let block = answer[i];
                 storedBlocks.push(block);
-                str += "<tr onclick=\"changePage(this);\" style=\"cursor: pointer;\">";
+                str += "<tr onclick=\"changePageBlock(this);\" style=\"cursor: pointer;\">";
                 str += "<th scope=\"row\">" + (i + 1) + "</th>";
                 str += "<td>" + block.hash + "</td>";
                 str += "<td>" + block.gasPrice + "</td>";
@@ -74,7 +90,7 @@ let displayBlock = function() {
     toDiplay.innerHTML = str;
 };
 
-let changePage = function(e) {
+let changePageBlock = function(e) {
     index = e.rowIndex;
     localStorage.setItem('gas', storedBlocks[index - 1].gas);
     localStorage.setItem('gasPrice', storedBlocks[index - 1].gasPrice);
@@ -83,6 +99,16 @@ let changePage = function(e) {
     localStorage.setItem('nonce', storedBlocks[index - 1].nonce);
     localStorage.setItem('to', storedBlocks[index - 1].to);
     location.href='block.html';
+};
+
+let changePageDoc = function(e) {
+    index = e.rowIndex;
+    localStorage.setItem('Name', storedUsers[index - 1].name);
+    localStorage.setItem('OpNb', storedUsers[index - 1].OpNb);
+    localStorage.setItem('SuccessNb', storedUsers[index - 1].SuccessNb);
+    localStorage.setItem('hash', storedUsers[index - 1].ops[0].hash);
+    localStorage.setItem('success', storedUsers[index - 1].ops[0].success);
+    location.href='host.html';
 };
 
 
