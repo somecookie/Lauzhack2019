@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="css/custom.css">
     <script src="jquery-3.4.1.js"></script>
     <script src="js/bootstrap.bundle.min.js"></script>
-    <script src='/js/sjcl.js'></script>
     <script type="text/javascript" src="queries.js"></script>
 </head>
 
@@ -60,13 +59,13 @@
             <thead>
             <tr>
                 <th></th>
-                <th><i class="fas fa-leaf mr-2 blue-text" aria-hidden="true"></i>BLOCK</th>
+                <th><i class="fas fa-leaf mr-2 blue-text" aria-hidden="true"></i>DOCTORS</th>
             </tr>
             </thead>
             <!-- Table head -->
 
             <!-- Table body -->
-            <tbody id="block">
+            <tbody id="docs">
             </tbody>
             <!-- Table body -->
         </table>
@@ -75,21 +74,8 @@
         <br>
         <br>
 
-        <h2>Want to validate the transaction?</h2>
 
 
-        <div class="custom-file form-group">
-
-            <div class="col-sm-10">
-                <div id="chat-form">
-                    <label class="control-label col-sm-3" for="email">Select the report:</label>
-
-                    <input type="button" class="btn btn-secondary" alt="Select the report to upload" id="fileShare" value="Select report">
-                    <input id="file-input" type="file" style="display: none;" />
-
-                </div>
-            </div>
-        </div>
 
 
     </div>
@@ -97,14 +83,9 @@
 
 <script>
     $(document).ready(function() {
-        displayBlock();
+        displayDoctors();
     });
 
-    document.getElementById("fileShare").onclick = () => {
-        document.getElementById('file-input').click();
-    }
-
-    document.getElementById("file-input").onchange = e => fileSelectionHandler(e)
 </script>
 
 </body>
