@@ -98,6 +98,7 @@ func writeHandler(writer http.ResponseWriter, request *http.Request) {
 			})
 
 			tx, err := Session.AppendValidated(nameDoctor, stringToKeccak256(hex.EncodeToString(hash)), successBool)
+			log.Println(tx.Hash().Hex())
 
 			if err != nil {
 				log.Println(err)
@@ -196,8 +197,8 @@ func getContract(writer http.ResponseWriter, request *http.Request){
 		listMeds := make([]infoMed,0)
 
 		for nameDoc,values := range validated {
-			opNb, _ := Session.GetDocMedOps("")
-			successNb, _ := Session.GetDocSuccess("")
+			opNb, _ := Session.GetDocMedOps(nameDoc)
+			successNb, _ := Session.GetDocSuccess(nameDoc)
 
 			curInfoMec := infoMed{
 				SuccessNb: *successNb,
