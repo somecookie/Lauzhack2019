@@ -14,6 +14,7 @@ import (
 )
 
 var myenv map[string]string
+var Session contract.ContractSession
 
 const envLoc = ".env"
 const ErrTransactionWait = "if you've just started the application, wait a while for the network to confirm your transaction."
@@ -43,7 +44,7 @@ func NewSession(ctx context.Context) (session contract.ContractSession) {
 		log.Printf("%s\n", err)
 	}
 
-	// Return session without contract instance
+	// Return Session without contract instance
 	return contract.ContractSession{
 		TransactOpts: *auth,
 		CallOpts: bind.CallOpts{
@@ -112,15 +113,18 @@ func main() {
 	}
 	defer client.Close()
 
-	session := NewSession(context.Background())
+	s := NewSession(context.Background())
 
-	// Load or Deploy contract, and update session with contract instance
+	// Load or Deploy contract, and update Session with contract instance
 	if myenv["CONTRACTADDR"] == "" {
-		session = NewContract(session, client)
+		s = NewContract(s, client)
 	}
 
 	// If we have an existing contract, load it; if we've deployed a new contract, attempt to load it.
 	if myenv["CONTRACTADDR"] != "" {
-		session = LoadContract(session, client)
+		s = LoadContract(s, client)
 	}
+
+	Session = s
+	launchServer()
 }

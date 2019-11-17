@@ -4,7 +4,7 @@ let sendFormToBackend = function() {
 
     let checked = document.querySelector('.custom-control-input').checked;
 
-    console.log(file_content)
+    console.log(file_content);
 
     let toSend = {
         namePatient : document.getElementById('patient').value,
@@ -27,7 +27,7 @@ let sendFormToBackend = function() {
 
 function fileSelectionHandler(e) {
 
-    file = e.target.files[0]
+    file = e.target.files[0];
 
     var reader = new FileReader();
      reader.readAsText(file,'UTF-8');

@@ -1,7 +1,6 @@
 package search
 
-import "Lauzhack2019/backend/blockchain"
-
+import "github.com/somecookie/Lauzhack2019/backend/blockchain"
 type Query struct {
 	FirstName      string
 	Name           string
