@@ -1,66 +1,33 @@
-<!DOCTYPE html>
-<html>
-
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta charset="UTF-8">
-  <title>Medster</title>
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/custom.css">
-  <script src="jquery-3.4.1.js"></script>
-  <script src="js/bootstrap.bundle.min.js"></script>
-  <script type="text/javascript" src="queries.js"></script>
-</head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="UTF-8">
+    <title>Medster</title>
+    <link rel="stylesheet" href="css/login.css">
+    <script src="jquery-3.4.1.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="login.js"></script>
+  </head>
 
-<body>
+<div class="wrapper fadeInDown">
+  <div id="formContent">
 
-<div class="container-fluid" id="title" style="background-color:#3c84ff;">
-  <h1 onclick="location.href='index.html';" style="cursor: pointer;">Medster</h1>
-</div>
+    <br>
+    <br>
+    <!-- Login Form -->
+    <form id="loginform">
+      <input type="text" id="login" class="fadeIn second" placeholder="login">
+      <input type="password" id="password" class="fadeIn third" placeholder="password">
+      <input type="button" class="fadeIn fourth" id="validate" value="Log In" onclick="logIn();">
+    </form>
 
-<br>
-
-<div class="container" id="main_container">
-  <br>
-  <div class="input-group mb-3">
-    <div class="input-group-prepend">
-    <span class="input-group-text" id="basic-addon1">
-      <img src="res/search.png" class="img-responsive" alt="Responsive image" width="16" height="16" />
-    </span>
-    </div>
-    <input type="text" class="form-control" placeholder="Search for transaction, doctor, success rate" aria-label="Search..." aria-describedby="basic-addon2">
-    <div class="input-group-append">
-      <button class="btn btn-outline-secondary" type="button">Search</button>
-    </div>
   </div>
-  <br>
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h3>Last Blocks</h3>
-    <button type="button" class="btn btn-outline-primary" id="getAllBlocks">See all blocks</button>
-  </div>
-  <br>
-  <table class="table">
-    <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">First</th>
-      <th scope="col">Last</th>
-      <th scope="col">Handle</th>
-    </tr>
-    </thead>
-    <tbody id="listBlocks">
-    </tbody>
-  </table>
 </div>
 
 <script>
-$(document).ready(function() {
-    getBlocks();
-    document.getElementById('getAllBlocks').onclick = function() {
-        getBlocks();
-    };
-});
+    function logIn() {
+        loginFunc();
+    }
 </script>
-
-</body>
-</html>
+        

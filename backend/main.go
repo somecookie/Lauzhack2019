@@ -1,10 +1,13 @@
 package main
 
 import (
+	"crypto/sha256"
 	"Lauzhack2019/backend/blockchain"
+	"Lauzhack2019/backend/database"
 	"Lauzhack2019/backend/search"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -12,10 +15,14 @@ import (
 
 func main() {
 	serverAddr := "localhost:8080"
+
+	database.PopulateUsers()
+
 	http.Handle("/", http.FileServer(http.Dir("../frontend")))
 	http.HandleFunc("/search", searchHandler)
 	http.HandleFunc("/write", writeHandler)
 	http.HandleFunc("/get", getHandler)
+	http.HandleFunc("/login", loginHandler)
 
 	for {
 		if err := http.ListenAndServe(serverAddr, nil); err != nil {
@@ -47,16 +54,53 @@ func writeHandler(writer http.ResponseWriter, request *http.Request) {
 	enableCors(&writer)
 	switch request.Method{
 	case "POST":
-		/*firstName := request.Form.Get("FirstName")
-		name := request.Form.Get("Name")
-		location := request.Form.Get("Location")
-		success := request.Form.Get("Success")
-		report := request.Form.Get("Report")
+		err := request.ParseForm()
+		if err == nil {
+			nameDoctor := request.Form.Get("nameDoctor")
+			namePatient := request.Form.Get("namePatient")
+			success := request.Form.Get("success")
+			reportToHash := request.Form.Get("toHash")
 
-		fmt.Println(firstName + name + location + success + report)*/
+			toHash,err := hex.DecodeString(reportToHash)
+			if err != nil{
+				fmt.Println(err.Error())
+				return
+			}
+			reportHash := sha256.Sum256(toHash)
 
-		//Create block
-		//Push block to the blockchain
+			fmt.Println(nameDoctor)
+			fmt.Println(namePatient)
+			fmt.Println(success)
+			fmt.Println(reportHash)
+
+		}
+
+	default:
+		writer.WriteHeader(http.StatusNotFound)
+	}
+}
+
+func loginHandler(writer http.ResponseWriter, request *http.Request) {
+	enableCors(&writer)
+	switch request.Method{
+	case "GET":
+		err := request.ParseForm()
+		if err == nil {
+			username := request.Form.Get("username")
+			password := request.Form.Get("password")
+
+			accepted := database.CheckUsers(username, password)
+
+			if blockListJson, err := json.Marshal(accepted); err == nil {
+				writer.Header().Set("Content-Type", "application/json")
+
+				writer.WriteHeader(http.StatusOK)
+				writer.Write(blockListJson)
+			} else {
+				writer.WriteHeader(http.StatusInternalServerError)
+			}
+		}
+
 	default:
 		writer.WriteHeader(http.StatusNotFound)
 	}
@@ -74,8 +118,8 @@ func getHandler(writer http.ResponseWriter, request *http.Request) {
 		if blockListJson, err := json.Marshal(blockList); err == nil {
 			writer.Header().Set("Content-Type", "application/json")
 
-			writer.Write(blockListJson)
 			writer.WriteHeader(http.StatusOK)
+			writer.Write(blockListJson)
 		} else {
 			writer.WriteHeader(http.StatusInternalServerError)
 		}
