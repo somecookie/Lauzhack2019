@@ -1,25 +1,25 @@
 let blockClicked = null;
 let storedBlocks = [];
-let row = -1
+let row = -1;
 
 let getBlocks = function() {
-    let get = $.ajax({
+    $.ajax({
         type: "GET",
         url: '/get',
         dataType:'json',
         success : function(answer) {
+            console.log(answer)
         let str = "";
         let blocks = document.getElementById('listBlocks');
 
         if (answer != null) {
             for(let i = 0 ; i < answer.length ; i++) {
                 let block = answer[i];
-                storedBlocks.push(block)
+                storedBlocks.push(block);
                 str += "<tr onclick=\"changePage(this);\" style=\"cursor: pointer;\">";
                 str += "<th scope=\"row\">" + (i + 1) + "</th>";
-                str += "<td>" + block.FirstName + "</td>";
-                str += "<td>" + block.Name + "</td>";
-                str += "<td>" + block.Location + "</td>";
+                str += "<td>" + block.hash + "</td>";
+                str += "<td>" + block.gasPrice + "</td>";
                 str += "</tr>";
             }
         }
@@ -35,25 +35,53 @@ let displayBlock = function() {
     //console.log(rowBlock)
     //if (rowBlock != -1) {
         //curBlock = storedBlocks[rowBlock - 1];
-        str += "<tr><th scope=\"row\">Name</th><td><i class=\"fas mr-2 grey-text\" aria-hidden=\"true\"></i>" + localStorage.getItem('FirstName') + "</td></tr>";
-        str += "<tr><th scope=\"row\">Surname</th><td><i class=\"fas mr-2 grey-text\" aria-hidden=\"true\"></i>"+ localStorage.getItem('Name') +"</td></tr>";
-        str += "<tr><th scope=\"row\">Location</th><td><i class=\"fas mr-2 grey-text\" aria-hidden=\"true\"></i>"+ localStorage.getItem('Location') +"</td></tr>";
-        str += "<tr><th scope=\"row\">Success</th><td><i class=\"fas mr-2 grey-text\" aria-hidden=\"true\"></i>"+ localStorage.getItem('Success') +"</td></tr>";
-        str += "<tr><th scope=\"row\">ReportHash</th><td><i class=\"fas mr-2 grey-text\" aria-hidden=\"true\"></i>"+ localStorage.getItem('ReportHash') +"</td></tr>";
+        str += "<tr><th scope=\"row\">Gas</th><td><i class=\"fas mr-2 grey-text\" aria-hidden=\"true\"></i>" + localStorage.getItem('gas') + "</td></tr>";
+        str += "<tr><th scope=\"row\">Gas price</th><td><i class=\"fas mr-2 grey-text\" aria-hidden=\"true\"></i>"+ localStorage.getItem('gasPrice') +"</td></tr>";
+        str += "<tr><th scope=\"row\">Hash</th><td><i class=\"fas mr-2 grey-text\" aria-hidden=\"true\"></i>"+ localStorage.getItem('hash') +"</td></tr>";
+        str += "<tr><th scope=\"row\">Input</th><td><i class=\"fas mr-2 grey-text\" aria-hidden=\"true\"></i>"+ localStorage.getItem('input') +"</td></tr>";
+        str += "<tr><th scope=\"row\">Nonce</th><td><i class=\"fas mr-2 grey-text\" aria-hidden=\"true\"></i>"+ localStorage.getItem('nonce') +"</td></tr>";
+        str += "<tr><th scope=\"row\">To</th><td><i class=\"fas mr-2 grey-text\" aria-hidden=\"true\"></i>"+ localStorage.getItem('to') +"</td></tr>";
 
     //}
     toDiplay.innerHTML = str;
-}
+};
 
 let changePage = function(e) {
     index = e.rowIndex;
-    localStorage.setItem('FirstName', storedBlocks[index - 1].FirstName);
-    localStorage.setItem('Name', storedBlocks[index - 1].Name);
-    localStorage.setItem('Location', storedBlocks[index - 1].Location);
-    localStorage.setItem('Success', storedBlocks[index - 1].Success);
-    localStorage.setItem('ReportHash', storedBlocks[index - 1].ReportHash);
+    localStorage.setItem('gas', storedBlocks[index - 1].gas);
+    localStorage.setItem('gasPrice', storedBlocks[index - 1].gasPrice);
+    localStorage.setItem('hash', storedBlocks[index - 1].hash);
+    localStorage.setItem('input', storedBlocks[index - 1].input);
+    localStorage.setItem('nonce', storedBlocks[index - 1].nonce);
+    localStorage.setItem('to', storedBlocks[index - 1].to);
     location.href='block.html';
+};
+
+
+function fileSelectionHandler(e) {
+
+    file = e.target.files[0]
+
+    var reader = new FileReader();
+    reader.readAsText(file,'UTF-8');
+
+    reader.onload = readerEvent => {
+        var content = readerEvent.target.result;
+        
+        let hashFile = sjcl.hash.sha256.hash(content);
+
+        let toSend = {
+            hash : hashFile,
+        };
+
+
+        $.ajax({
+            type: "POST",
+            url: '/validate',
+            data: toSend,
+            success: function(answer) {
+                console.log(answer);
+            }
+        })
+   }
 }
-
-
-

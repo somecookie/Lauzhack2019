@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="css/custom.css">
   <script src="jquery-3.4.1.js"></script>
   <script src="js/bootstrap.bundle.min.js"></script>
+  <script src='/js/sjcl.js'></script>
   <script type="text/javascript" src="queries.js"></script>
 </head>
 
@@ -70,6 +71,26 @@
         <!-- Table body -->
       </table>
       <!-- Table  -->
+
+      <br>
+      <br>
+
+      <h2>Want to validate the transaction?</h2>
+
+
+      <div class="custom-file form-group">
+    
+            <div class="col-sm-10">
+                <div id="chat-form">
+                        <label class="control-label col-sm-3" for="email">Select the report:</label>
+    
+            <input type="button" class="btn btn-secondary" alt="Select the report to upload" id="fileShare" value="Select report">
+            <input id="file-input" type="file" style="display: none;" />
+    
+                </div>
+            </div>
+        </div>
+    
     
 </div>
 </div>
@@ -78,7 +99,13 @@
   $(document).ready(function() {
       displayBlock();
   });
-  </script>
+
+  document.getElementById("fileShare").onclick = () => {
+      document.getElementById('file-input').click();
+  }
+
+  document.getElementById("file-input").onchange = e => fileSelectionHandler(e)
+</script>
 
 </body>
 </html>

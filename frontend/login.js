@@ -1,12 +1,5 @@
 let loginFunc = function() {
 
-    /*let toSend = {
-        username : document.getElementById('login').value,
-        password : document.getElementById('password').value,
-    };*/
-
-    //console.log(toSend);
-
     $.ajax({
         type: "GET",
         url: '/login',

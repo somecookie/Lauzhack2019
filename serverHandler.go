@@ -5,27 +5,37 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"github.com/Lnelso/Lauzhack2019/backend/blockchain"
-	"github.com/Lnelso/Lauzhack2019/backend/database"
-	"github.com/Lnelso/Lauzhack2019/backend/search"
+	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/somecookie/Lauzhack2019/backend/database"
+	"github.com/somecookie/Lauzhack2019/backend/search"
 	"log"
 	"net/http"
 	"strconv"
 )
 
-func main() {
-	serverAddr := "localhost:8080"
+var hasher = sha256.New()
+var transactions = make([]*types.Transaction, 0)
 
+type GetAnswer struct {
+	contract    string
+	transaction *types.Transaction
+	doctorName  string
+	hashReport  string
+	success     bool
+	successRate float32
+}
+
+func launchServer() {
 	database.PopulateUsers()
-
-	http.Handle("/", http.FileServer(http.Dir("../frontend")))
+	http.Handle("/", http.FileServer(http.Dir("frontend")))
 	http.HandleFunc("/search", searchHandler)
 	http.HandleFunc("/write", writeHandler)
 	http.HandleFunc("/get", getHandler)
 	http.HandleFunc("/login", loginHandler)
+	http.HandleFunc("/validate", validateHandler)
 
 	for {
-		if err := http.ListenAndServe(serverAddr, nil); err != nil {
+		if err := http.ListenAndServe("localhost:8080", nil); err != nil {
 			log.Println(err)
 		}
 
@@ -52,27 +62,50 @@ func searchHandler(writer http.ResponseWriter, request *http.Request) {
 
 func writeHandler(writer http.ResponseWriter, request *http.Request) {
 	enableCors(&writer)
-	switch request.Method{
+	switch request.Method {
 	case "POST":
 		err := request.ParseForm()
 		if err == nil {
 			nameDoctor := request.Form.Get("nameDoctor")
-			namePatient := request.Form.Get("namePatient")
+			//namePatient := request.Form.Get("namePatient")
 			success := request.Form.Get("success")
+			successBool := success == "true"
+
 			reportToHash := request.Form.Get("toHash")
 
-			toHash,err := hex.DecodeString(reportToHash)
-			if err != nil{
-				fmt.Println(err.Error())
+			hasher.Reset()
+			_, err := hasher.Write([]byte(reportToHash))
+
+			if err != nil {
+				log.Println(err)
 				return
 			}
-			reportHash := sha256.Sum256(toHash)
 
-			fmt.Println(nameDoctor)
-			fmt.Println(namePatient)
-			fmt.Println(success)
-			fmt.Println(reportHash)
+			hash := hasher.Sum(nil)
 
+			tx, err := Session.AppendValidated(nameDoctor, stringToKeccak256(hex.EncodeToString(hash)), successBool)
+
+			if err != nil {
+				log.Println(err)
+				return
+			}
+
+			transactions = append(transactions, tx)
+
+	default:
+		writer.WriteHeader(http.StatusNotFound)
+	}
+}
+
+func validateHandler(writer http.ResponseWriter, request *http.Request) {
+	enableCors(&writer)
+	switch request.Method{
+	case "POST":
+		err := request.ParseForm()
+		if err == nil {
+			hash := request.Form.Get("hash")
+
+			fmt.Println(hash)
 		}
 
 	default:
@@ -80,9 +113,10 @@ func writeHandler(writer http.ResponseWriter, request *http.Request) {
 	}
 }
 
+
 func loginHandler(writer http.ResponseWriter, request *http.Request) {
 	enableCors(&writer)
-	switch request.Method{
+	switch request.Method {
 	case "GET":
 		err := request.ParseForm()
 		if err == nil {
@@ -108,22 +142,33 @@ func loginHandler(writer http.ResponseWriter, request *http.Request) {
 
 func getHandler(writer http.ResponseWriter, request *http.Request) {
 	enableCors(&writer)
-	switch request.Method{
+	switch request.Method {
 	case "GET":
-		//Make a list of all blocks
-		//blockList := getBlocksAsList()
 
-		blockList := blockchain.GetMockDataAsList()
+		writer.Header().Set("Content-Type", "application/json")
+
+		if len(transactions) == 0 {
+			writer.WriteHeader(http.StatusOK)
+		} else {
+			if json, err := json.Marshal(transactions); err == nil {
+				writer.WriteHeader(http.StatusOK)
+				writer.Write(json)
+			} else {
+				log.Println(err)
+			}
+		}
+
+		/*blockList := blockchain.GetMockDataAsList()
 		//blockList := getBlocksAsList()
 		if blockListJson, err := json.Marshal(blockList); err == nil {
-			writer.Header().Set("Content-Type", "application/json")
+
 
 			writer.WriteHeader(http.StatusOK)
 			writer.Write(blockListJson)
 		} else {
 			writer.WriteHeader(http.StatusInternalServerError)
 		}
-
+		*/
 	default:
 		writer.WriteHeader(http.StatusNotFound)
 	}

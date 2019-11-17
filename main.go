@@ -3,17 +3,19 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/Lnelso/Lauzhack2019/contract"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/joho/godotenv"
+	"github.com/somecookie/Lauzhack2019/contract"
 	"log"
 	"os"
 )
 
 var myenv map[string]string
+var Session contract.ContractSession
+var contractHash string
 
 const envLoc = ".env"
 const ErrTransactionWait = "if you've just started the application, wait a while for the network to confirm your transaction."
@@ -43,7 +45,7 @@ func NewSession(ctx context.Context) (session contract.ContractSession) {
 		log.Printf("%s\n", err)
 	}
 
-	// Return session without contract instance
+	// Return Session without contract instance
 	return contract.ContractSession{
 		TransactOpts: *auth,
 		CallOpts: bind.CallOpts{
@@ -63,6 +65,7 @@ func NewContract(session contract.ContractSession, client *ethclient.Client) con
 		log.Fatalf("could not deploy contract: %v\n", err)
 	}
 	fmt.Printf("Contract deployed! Wait for tx %s to be confirmed.\n", tx.Hash().Hex())
+	contractHash = tx.Hash().Hex()
 
 	session.Contract = instance
 	updateEnvFile("CONTRACTADDR", contractAddress.Hex())
@@ -110,15 +113,19 @@ func main() {
 	}
 	defer client.Close()
 
-	session := NewSession(context.Background())
+	s := NewSession(context.Background())
+	s = NewContract(s, client)
 
-	// Load or Deploy contract, and update session with contract instance
-	if myenv["CONTRACTADDR"] == "" {
-		session = NewContract(session, client)
-	}
+	// Load or Deploy contract, and update Session with contract instance
+	/*if myenv["CONTRACTADDR"] == "" {
+		s = NewContract(s, client)
+	}*/
 
-	// If we have an existing contract, load it; if we've deployed a new contract, attempt to load it.
+/*	// If we have an existing contract, load it; if we've deployed a new contract, attempt to load it.
 	if myenv["CONTRACTADDR"] != "" {
-		session = LoadContract(session, client)
-	}
+		s = LoadContract(s, client)
+	}*/
+
+	Session = s
+	launchServer()
 }

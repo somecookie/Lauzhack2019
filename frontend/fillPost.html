@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="css/custom.css">
   <script src="jquery-3.4.1.js"></script>
   <script src="js/bootstrap.bundle.min.js"></script>
+  <script src='/js/sjcl.js'></script>
   <script src="form.js"></script>
 </head>
 
@@ -43,7 +44,6 @@
 </div>
 
 <div class="wrapper">
-
 <br>
 
 <div class="container" id="main_container">
@@ -73,8 +73,11 @@
                 <input type="button" class="btn btn-secondary" alt="Select the report to upload" id="fileShare" value="Select report">
                 <input id="file-input" type="file" style="display: none;" />
             </div>
+<<<<<<< HEAD
         </div>
     </div>
+=======
+>>>>>>> 478ec8906dae456529abd9cffaba1f9ab6f839ac
     </form>
 
     <div class="form-group" id="send_op">
@@ -89,7 +92,7 @@
 
         document.getElementById("fileShare").onclick = () => {
             document.getElementById('file-input').click();
-        }
+        };
         document.getElementById("file-input").onchange = e => fileSelectionHandler(e)
 </script>
 

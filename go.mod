@@ -1,4 +1,4 @@
-module github.com/Lnelso/Lauzhack2019
+module github.com/somecookie/Lauzhack2019
 
 go 1.13
 
