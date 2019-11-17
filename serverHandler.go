@@ -31,6 +31,8 @@ func launchServer() {
 	http.HandleFunc("/write", writeHandler)
 	http.HandleFunc("/get", getHandler)
 	http.HandleFunc("/login", loginHandler)
+	http.HandleFunc("/validate", validateHandler)
+
 	for {
 		if err := http.ListenAndServe("localhost:8080", nil); err != nil {
 			log.Println(err)
@@ -90,12 +92,27 @@ func writeHandler(writer http.ResponseWriter, request *http.Request) {
 
 			transactions = append(transactions, tx)
 
+	default:
+		writer.WriteHeader(http.StatusNotFound)
+	}
+}
+
+func validateHandler(writer http.ResponseWriter, request *http.Request) {
+	enableCors(&writer)
+	switch request.Method{
+	case "POST":
+		err := request.ParseForm()
+		if err == nil {
+			hash := request.Form.Get("hash")
+
+			fmt.Println(hash)
 		}
 
 	default:
 		writer.WriteHeader(http.StatusNotFound)
 	}
 }
+
 
 func loginHandler(writer http.ResponseWriter, request *http.Request) {
 	enableCors(&writer)
