@@ -26,9 +26,7 @@ html {
     margin: 40px 8px 10px 8px; 
     color: #cccccc;
   }
-  
-  
-  
+
   /* STRUCTURE */
   
   .wrapper {
@@ -64,8 +62,7 @@ html {
     border-radius: 0 0 10px 10px;
   }
   
-  
-  
+
   /* TABS */
   
   h2.inactive {
@@ -259,4 +256,12 @@ html {
   
   #icon {
     width:60%;
+  }
+
+  #loginWrapper{
+    margin-bottom: 18px;
+  }
+
+  #password{
+    margin-left: 8px;
   }

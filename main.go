@@ -3,12 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/Lnelso/Lauzhack2019/contract"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/joho/godotenv"
-	"github.com/somecookie/Lauzhack2019/contract"
 	"log"
 	"os"
 )
@@ -103,8 +103,6 @@ func updateEnvFile(k string, val string) {
 
 func main() {
 	loadEnv()
-
-	//ctx := context.Background()
 
 	client, err := ethclient.Dial(myenv["GATEWAY"])
 	if err != nil {

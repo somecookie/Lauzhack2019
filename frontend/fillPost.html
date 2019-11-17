@@ -15,92 +15,70 @@
 <body>
 
 <div class="container-fluid" id="title" style="background-color:#3c84ff;">
-  <h1 onclick="location.href='search.html';" style="cursor: pointer;">Medster</h1>
+    <div id="title_inner">
+        <h1 onclick="location.href='search.html';" style="cursor: pointer;">Medster</h1>
+    </div>
+    <div id="title_nav">
+        <nav id="sidebar">
+
+            <ul class="list-unstyled components">
+                <li>
+                    <a href="search.html">Transactions</a>
+                </li>
+                <li>
+                    <a href="fillPost.html">Post</a>
+                </li>
+                <li>
+                    <a href="#">Validate</a>
+                </li>
+                <li>
+                    <a href="#">Profile</a>
+                </li>
+                <li>
+                    <a href="#">Sign out</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 </div>
 
 <div class="wrapper">
- <!-- Sidebar  -->
- <nav id="sidebar">
-
-    <div class="sidebar-header">
-        <img src = "/res/pp.png" class = "img-circle">
-        <h3 style="text-align:center;"> name </h3>
-    </div>
-
-    <ul class="list-unstyled components">
-        <!--<p>Dummy Heading</p>-->
-        <li>
-            <a href="search.html">Get chain</a>
-        </li>
-        <li>
-            <a href="fillPost.html">Post</a>
-        </li>
-        <li>
-            <a href="#">Validate</a>
-        </li>
-        <li>
-            <a href="#">Profile</a>
-        </li>
-        <li>
-            <a href="#">Sign out</a>
-        </li>
-    </ul>
-</nav>
 
 <br>
 
 <div class="container" id="main_container">
   <br>
 
-  <h1> Form to insert after a new operation :</h1>
+  <h2 id="new_op"> Register a new operation</h2>
 
-  <form class="form-horizontal" action="/action_page.php">
+  <form class="form-horizontal" id="form_op">
     <div class="form-group">
-      <label class="control-label col-sm-2" for="email">Name of the patient:</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" id="patient" placeholder="Name">
-      </div>
+      <label class="control-label col-sm-2">Name of the patient:</label>
+      <input type="text" class="form-control" id="patient" placeholder="Name">
     </div>
     <div class="form-group">
-      <label class="control-label col-sm-2" for="pwd">Name of the doctor:</label>
-      <div class="col-sm-10">
-        <input type="text" class="form-control" id="doctor" placeholder="Name">
-      </div>
+      <label class="control-label col-sm-2">Name of the doctor:</label>
+      <input type="text" class="form-control" id="doctor" placeholder="Name">
     </div>
    
     <div class="custom-control custom-checkbox form-group">
-            <input type="checkbox" class="custom-control-input" id="customCheck">
-            <label class="custom-control-label" for="customCheck">The operation was a success</label>
-        </div>
+        <input type="checkbox" class="custom-control-input" id="customCheck">
+        <label class="custom-control-label" for="customCheck">The operation was a success</label>
+    </div>
 
-        <div class="custom-file form-group">
-
-                <div class="col-sm-10">
-                    <div id="chat-form">
-                            <label class="control-label col-sm-3" for="email">Select the report:</label>
-
+    <div class="custom-file form-group">
+        <div class="col-sm-10">
+            <div id="chat-form">
+                <label class="control-label col-sm-3">Select the report:</label>
                 <input type="button" class="btn btn-secondary" alt="Select the report to upload" id="fileShare" value="Select report">
                 <input id="file-input" type="file" style="display: none;" />
-    
-                    </div>
-                </div>
             </div>
-    <!--<div class="custom-file form-group">
-        <div class="col-sm-10">
-            <input type="file" class="custom-file-input" id="customFile">
-            <label class="custom-file-label" for="customFile">Select the report to upload</label>
         </div>
-    </div>-->
+    </div>
     </form>
-  
-    <br>
-    <br>
-    <br>
 
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-primary" onclick="sendForm();">Submit</button>
-        </div>
+    <div class="form-group" id="send_op">
+        <button type="submit" class="btn btn-primary" onclick="sendForm();">Submit</button>
     </div>
 </div>
 

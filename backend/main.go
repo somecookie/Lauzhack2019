@@ -2,12 +2,12 @@ package main
 
 import (
 	"crypto/sha256"
-	"Lauzhack2019/backend/blockchain"
-	"Lauzhack2019/backend/database"
-	"Lauzhack2019/backend/search"
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
+	"github.com/Lnelso/Lauzhack2019/backend/blockchain"
+	"github.com/Lnelso/Lauzhack2019/backend/database"
+	"github.com/Lnelso/Lauzhack2019/backend/search"
 	"log"
 	"net/http"
 	"strconv"

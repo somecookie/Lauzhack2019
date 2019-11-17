@@ -20,7 +20,6 @@ type Block struct {
 	SuccessRate float64
 }
 
-
 func GetMockDataAsList() []Block {
 	element1 := Block{
 		FirstName:  "Ric",
