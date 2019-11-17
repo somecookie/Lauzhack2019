@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
+	"fmt"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/somecookie/Lauzhack2019/backend/database"
 	"github.com/somecookie/Lauzhack2019/backend/search"
@@ -22,13 +23,13 @@ type infoMed struct {
 	Name string `json:"name"`
 	OpNb big.Int `json:"OpNb"`
 	SuccessNb big.Int `json:"SuccessNb"`
-	Ops []succ `json:"ops"`
+	Ops []*succ `json:"ops"`
 }
 
 var hasher = sha256.New()
 var transactions = make([]*types.Transaction, 0)
 var docs = make([]string, 0)
-var validated = make(map[string][]succ)
+var validated = make(map[string][]*succ)
 
 
 func launchServer() {
@@ -74,7 +75,7 @@ func writeHandler(writer http.ResponseWriter, request *http.Request) {
 		if err == nil {
 			nameDoctor := request.Form.Get("nameDoctor")
 			if _, ok := validated[nameDoctor]; !ok{
-				validated[nameDoctor] = make([]succ,0)
+				validated[nameDoctor] = make([]*succ,0)
 			}
 			//namePatient := request.Form.Get("namePatient")
 			success := request.Form.Get("success")
@@ -91,7 +92,7 @@ func writeHandler(writer http.ResponseWriter, request *http.Request) {
 			}
 
 			hash := hasher.Sum(nil)
-			validated[nameDoctor] = append(validated[nameDoctor], succ{
+			validated[nameDoctor] = append(validated[nameDoctor], &succ{
 				Hash:   hex.EncodeToString(hash),
 				Success: successBool,
 			})
@@ -123,10 +124,10 @@ func validateHandler(writer http.ResponseWriter, request *http.Request) {
 
 		}
 
-		//TODO hack de ouf
-		for _, succ := range validated{
+		//TODO hac
+		for name, succ := range validated{
 			for _, s:= range succ{
-				s.IsValid = true
+				Session.UpdateValidated(name,stringToKeccak256(s.Hash))
 			}
 		}
 
@@ -208,7 +209,12 @@ func getContract(writer http.ResponseWriter, request *http.Request){
 
 			for _,val := range values{
 				isValid, _ := Session.IsValid(nameDoc, stringToKeccak256(val.Hash))
+
 				val.IsValid = isValid
+			}
+
+			for _,val := range values{
+				fmt.Println(val.IsValid)
 			}
 
 			curInfoMec := infoMed{
