@@ -14,15 +14,15 @@ import (
 	"strconv"
 )
 type succ struct {
-	hash string `json:"hash"`
-	success bool `json:"success"`
+	Hash string `json:"hash"`
+	Success bool `json:"success"`
 }
 
 type infoMed struct {
-	name string `json:"name"`
+	Name string `json:"name"`
 	OpNb big.Int `json:"OpNb"`
 	SuccessNb big.Int `json:"SuccessNb"`
-	ops []succ `json:"ops"`
+	Ops []succ `json:"ops"`
 }
 
 var hasher = sha256.New()
@@ -93,8 +93,8 @@ func writeHandler(writer http.ResponseWriter, request *http.Request) {
 
 			hash := hasher.Sum(nil)
 			validated[nameDoctor] = append(validated[nameDoctor], succ{
-				hash:   hex.EncodeToString(hash),
-				success: successBool,
+				Hash:   hex.EncodeToString(hash),
+				Success: successBool,
 			})
 
 			tx, err := Session.AppendValidated(nameDoctor, stringToKeccak256(hex.EncodeToString(hash)), successBool)
@@ -200,10 +200,10 @@ func getContract(writer http.ResponseWriter, request *http.Request){
 			successNb, _ := Session.GetDocSuccess("")
 
 			curInfoMec := infoMed{
-				name:      nameDoc,
-				OpNb:      *opNb,
 				SuccessNb: *successNb,
-				ops: values,
+				Ops: values,
+				Name:      nameDoc,
+				OpNb:      *opNb,
 			}
 
 			listMeds = append(listMeds, curInfoMec)
