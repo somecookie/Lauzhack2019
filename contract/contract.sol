@@ -16,8 +16,12 @@ contract Doc{
     }
 
     function appendValidated(string memory doc, bytes32 hash, bool success) public {
-        validated[doc][hash] = true;
+        validated[doc][hash] = false;
         appendMedOp(doc);
         appendDocSuccess(doc, success);
+    }
+
+    function updateValidated(string memory doc, bytes32 hash) public{
+        validated[doc][hash] = true;
     }
 }
